@@ -3,5 +3,8 @@
   "version": "1.0.0",
   "description": "WEPPO project",
   "main": "server.js",
-  "author": "Wojciech Woźniak"
+  "author": "Wojciech Woźniak",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
