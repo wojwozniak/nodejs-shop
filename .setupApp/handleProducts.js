@@ -1,5 +1,5 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const credentials = require("../creditentials.json");
+const credentials = require("../credentials.json");
 const exampleProducts = require("./defaultProducts.json")
 
 async function connectToClient() {
