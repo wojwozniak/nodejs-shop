@@ -1,0 +1,7 @@
+{
+  "name": "nodejs-shop",
+  "version": "1.0.0",
+  "description": "WEPPO project",
+  "main": "server.js",
+  "author": "Wojciech Woźniak"
+}
