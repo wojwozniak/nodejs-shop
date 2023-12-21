@@ -1,0 +1,47 @@
+[
+    {
+        "name": "Gaming Laptop",
+        "description": "High performance laptop",
+        "price": 3999,
+        "stock": 10,
+        "image": "path",
+        "category": "Electronics",
+        "brand": "Aaaa"
+    },
+    {
+        "name": "Smartphone",
+        "description": "High-end smartphone with advanced features",
+        "price": 999,
+        "stock": 15,
+        "image": "smartphone.jpg",
+        "category": "Electronics",
+        "brand": "BrandB"
+    },
+    {
+        "name": "Tablet",
+        "description": "10-inch tablet with a high-resolution display",
+        "price": 499,
+        "stock": 20,
+        "image": "tablet.jpg",
+        "category": "Electronics",
+        "brand": "BrandC"
+    },
+    {
+        "name": "Wireless Headphones",
+        "description": "Noise-canceling wireless headphones for immersive audio",
+        "price": 299,
+        "stock": 30,
+        "image": "headphones.jpg",
+        "category": "Electronics",
+        "brand": "BrandD"
+    },
+    {
+        "name": "4K Smart TV",
+        "description": "55-inch 4K Ultra HD Smart TV with built-in streaming apps",
+        "price": 799,
+        "stock": 10,
+        "image": "tv.jpg",
+        "category": "Electronics",
+        "brand": "BrandE"
+    }
+]
