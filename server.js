@@ -1,44 +1,42 @@
+/* # Import */
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const creditentials = require('./creditentials.json');
+const credentials = require('./credentials.json');
 const express = require('express');
 const app = express();
 const path = require('path');
+const mongoose = require('mongoose');
 
+/* # Setup views */
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-const uri = `mongodb+srv://${creditentials.databaseUser}:${creditentials.databasePassword}@weppo.sew572t.mongodb.net/?retryWrites=true&w=majority`;
-
-const client = new MongoClient(uri, {
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-    }
+/* # Setup MongoDB using mongoose */
+const uri = `mongodb+srv://${credentials.databaseUser}:${credentials.databasePassword}@weppo.sew572t.mongodb.net/WEPPO?retryWrites=true&w=majority`;
+mongoose.connect(uri, {
+    useNewUrlParser: true
+}).then(() => {
+    console.log("Successfully connected to MongoDB using Mongoose");
+}).catch(err => {
+    console.error("Error connecting to MongoDB", err);
 });
 
-async function run() {
-    try {
-        // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
-        // Send a ping to confirm a successful connection
-        await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    } finally {
-        // Ensures that the client will close when you finish/error
-        await client.close();
-    }
-}
-run().catch(console.dir);
+/* # Setup models */
+const Product = require('./models/Product');
 
+/* # Setup app */
 app.use(express.static(path.join(__dirname, 'public')));
-
 const port = 3000;
-
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
 
-app.get('/', (req, res) => {
-    res.render('index');
-  });
+app.get('/', async (req, res) => {
+    try {
+        const products = await Product.find({});
+        console.log("Products retrieved:", products);
+        res.render('index', { products });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error occurred while fetching products');
+    }
+});

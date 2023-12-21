@@ -1,5 +1,5 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const credentials = require("../credentials.json");
+const credentials = require("./../credentials.json");
 const exampleProducts = require("./defaultProducts.json")
 
 async function connectToClient() {
@@ -73,7 +73,7 @@ const client = new MongoClient(uri, {
 });
 
 // Dodaj domyślne produkty do bazy danych
-// addProducts().catch(console.dir);
+addProducts().catch(console.dir);
 
 // Wyczyść bazę danych z produktów
 // clearProducts().catch(console.dir);
