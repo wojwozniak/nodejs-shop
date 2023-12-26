@@ -5,6 +5,7 @@ const UserSchema = new mongoose.Schema({
     username: String,
     password: String,
     email: String,
+    role: { type: String, default: 'user' },
     basket: { type: mongoose.Schema.Types.ObjectId, ref: 'Basket' }
 });
 
