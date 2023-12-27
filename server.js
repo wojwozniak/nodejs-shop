@@ -8,7 +8,6 @@ const session = require('express-session');
 
 /* # Imports for database */
 const credentials = require('./credentials.json');
-const { MongoClient, ServerApiVersion } = require('mongodb');
 const mongoose = require('mongoose');
 const User = require('./models/User');
 const Basket = require('./models/Basket');
@@ -31,9 +30,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 /* # Setup MongoDB using mongoose */
 const uri = `mongodb+srv://${credentials.databaseUser}:${credentials.databasePassword}@weppo.sew572t.mongodb.net/WEPPO?retryWrites=true&w=majority`;
-mongoose.connect(uri, {
-  useNewUrlParser: true
-}).then(() => {
+mongoose.connect(uri).then(() => {
   console.log("Successfully connected to MongoDB using Mongoose");
 }).catch(err => {
   console.error("Error connecting to MongoDB", err);
@@ -201,11 +198,16 @@ app.get('/clearBasket', async (req, res) => {
 
 /* # Checkout */
 app.get('/sendOrder', async (req, res) => {
+  const user = req.session.user.username;
   const newOrder = new Order({
     items: (await Basket.findById(req.session.user.basket)).items,
-    user: req.session.user._id,
+    user: user,
     date: new Date()
   });
+  //console.log(newOrder);
+  if (!newOrder.items.length) {
+    return res.redirect('/basket');
+  }
   await newOrder.save();
   res.redirect('/clearBasket');
 });
@@ -233,6 +235,52 @@ app.get('/admin/users', async (req, res) => {
     } catch (error) {
       console.error(error);
       res.status(500).send('Error in get /admin/users route');
+    }
+  } else {
+    res.redirect('/auth');
+  }
+});
+
+function convertDateString(input) {
+  const date = new Date(input);
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+
+  return `${hours}:${minutes}:${seconds}, ${day}.${month}.${year}`;
+}
+
+/* # Render admin panel for order list */
+app.get('/admin/orders', async (req, res) => {
+  if (req.session.user && req.session.user.role === 'admin') {
+    try {
+      const orders = await Order.find({});
+      const products = await Product.find({});
+      let data = [];
+      console.log(orders);
+      for (let order of orders) {
+        const items = [];
+        for (let item of order.items) {
+          const product = products.find(product => product._id.toString() === item._id.toString());
+          items.push({
+            name: product.name,
+            quantity: item.quantity
+          });
+        }
+        data.push({
+          username: order.user,
+          items,
+          date: convertDateString(order.date)
+        });
+      }
+
+      res.render('admin-orders', { user: req.session.user, currentPath: req.path, orders: data });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Error in get /admin/orders route');
     }
   } else {
     res.redirect('/auth');
