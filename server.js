@@ -302,6 +302,21 @@ app.get('/admin/products', async (req, res) => {
   }
 });
 
+/* # Render admin panel for editing product */
+app.get('/admin/edit-product', async (req, res) => {
+  if (req.session.user && req.session.user.role === 'admin') {
+    try {
+      const product = await Product.findById(req.query.id);
+      res.render('admin-edit-product', { user: req.session.user, currentPath: req.path, product });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Error in get /admin/edit-product route');
+    }
+  } else {
+    res.redirect('/auth');
+  }
+});
+
 /* ### POST ROUTES ### */
 
 async function genUser(req) {
