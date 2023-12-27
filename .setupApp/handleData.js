@@ -244,8 +244,25 @@ async function getSentOrders() {
   }
 }
 
+async function deleteSentOrders() {
+  try {
+    connectToClient();
+
+    const db = client.db("WEPPO");
+    const collection = db.collection('orders');
+
+    await collection.deleteMany({});
+    console.log("All orders have been removed from the database");
+  } finally {
+    closeClientConnection();
+  }
+}
+
+// Usuwanie wszyskich zamówień z bazy danych
+//deleteSentOrders().catch(console.dir);
+
 // Wysłane zamówienia
-getSentOrders().catch(console.dir);
+//getSentOrders().catch(console.dir);
 
 // Wyczyść zawartość koszyka użytkownika
 //clearUserBasketContents('admin').catch(console.dir);
