@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Order list | Nodeshop.io</title>
+  <link href="/styles.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+
+  <% include partials/navbar %>
+
+    <div class="container mx-auto p-4">
+      <h1 class="text-4xl font-bold mb-6">Order List</h1>
+      <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <table class="table-auto w-full">
+          <thead>
+            <tr>
+              <th class="border px-4 py-2">Username</th>
+              <th class="border px-4 py-2">Items</th>
+              <th class="border px-4 py-2">Time of order</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% orders.forEach(function(order) { %>
+              <tr>
+                <td class="border px-4 py-2">
+                  <%= order.username %>
+                </td>
+                <td class="border px-4 py-2">
+                  <% order.items.forEach(function(item) { %>
+                    <div>
+                      <%= item.name %> (Quantity: <%= item.quantity %>)
+                    </div>
+                    <% }) %>
+                </td>
+                <td class="border px-4 py-2">
+                  <%= order.date %>
+                </td>
+              </tr>
+              <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <% include partials/footer %>
+
+</body>
+
+</html>
