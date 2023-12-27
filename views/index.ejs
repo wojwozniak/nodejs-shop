@@ -41,10 +41,9 @@
                     Price: $<%= product.price %>
                   </span>
                   <% if (user) { %>
-                    <button 
-                    class="add-basket-btn bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full"
-                    id="add-to-basket-<%= product._id %>"
-                    >
+                    <button
+                      class="add-basket-btn bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full"
+                      id="add-to-basket-<%= product._id %>">
                       Add to Basket
                     </button>
                     <% } %>
@@ -72,6 +71,17 @@
       if (searchTerm !== '') {
         window.location.href = `/search?query=${encodeURIComponent(searchTerm)}`;
       }
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const buttons = document.querySelectorAll('.add-basket-btn');
+    buttons.forEach(button => {
+      button.addEventListener('click', function () {
+        const idd = this.id.split('-')[3];
+        window.location.href = `/addToBasket?id=${idd}`;
+        alert('Added choosen product to basket');
+      });
     });
   });
 </script>
