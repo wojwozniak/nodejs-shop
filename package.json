@@ -6,7 +6,8 @@
   "author": "Wojciech Woźniak",
   "scripts": {
     "build-css": "npx tailwindcss -i ./styles.css -o ./public/styles.css",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "w": "npm run build-css && npm run dev"
   },
   "dependencies": {
     "autoprefixer": "^10.4.16",
