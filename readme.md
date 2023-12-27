@@ -4,6 +4,8 @@
 
 Nodeshop.io is a simple e-commerce application built with Node.js, Express, and MongoDB. It is an end project for university course i attend.
 
+All the data is stored in MongoDB Atlas cloud database. Entire frontend is built with EJS templating engine. I used Tailwind CSS for styling.
+
 ## Features
 Main features required by the course:
 
@@ -21,3 +23,15 @@ Main features required by the course:
 - [x] Add/modify/delete product
 - [x] See user list
 - [x] See order list 
+
+## Screenshots
+
+### Home page
+![Home page](./.about/screenshot.png)
+
+## Installation
+- Clone the repository
+- Install dependencies with `npm install`
+- Create credientials.json file in the root directory and add your MongoDB Atlas `databaseUser` and `databasePassword`
+- Run the application with `npm start`
+- After changing styles, run `npm run build-css` to compile Tailwind CSS and refresh with F5
