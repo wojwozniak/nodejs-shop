@@ -132,8 +132,18 @@ app.get('/basket', async (req, res) => {
   if (req.session.user) {
     try {
       const basket = await Basket.findById(req.session.user.basket);
-      console.log(basket);
-      res.render('basket', { user: req.session.user, currentPath: req.path, basket: basket.items });
+      const products = await Product.find({});
+      const checkoutData = [];
+      for (let item of basket.items) {
+        const product = products.find(product => product._id.toString() === item._id.toString());
+        checkoutData.push({
+          name: product.name,
+          quantity: item.quantity,
+          price: product.price
+        });
+      }
+
+      res.render('basket', { user: req.session.user, currentPath: req.path, basket: checkoutData });
     } catch (error) {
       console.error(error);
       res.status(500).send('Error in get /basket route - fetch basket');

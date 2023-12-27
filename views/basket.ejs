@@ -48,15 +48,15 @@
               </thead>
               <tbody>
                 <% let totalPrice=0; %>
-                  <% basket.forEach(item=> { %>
-                    <% let itemTotal=item.product.price * item.quantity; %>
+                  <% basket.forEach(item => { %>
+                    <% let itemTotal=item.price * item.quantity; %>
                       <% totalPrice +=itemTotal; %>
                         <tr>
                           <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            <%= item.product.name %>
+                            <%= item.name %>
                           </td>
                           <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                            $<%= item.product.price.toFixed(2) %>
+                            $<%= item.price.toFixed(2) %>
                           </td>
                           <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                             <%= item.quantity %>
