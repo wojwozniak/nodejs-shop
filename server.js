@@ -119,7 +119,8 @@ app.post('/auth', async (req, res) => {
             if (user && bcrypt.compareSync(req.body.password, user.password)) {
                 req.session.user = {
                     username: user.username,
-                    email: user.email
+                    email: user.email,
+                    role: user.role
                 };
                 res.redirect('/');
             } else {
