@@ -4,6 +4,7 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const credentials = require("../credentials.json");
 const exampleProducts = require("./defaultProducts.json");
+const Basket = require('../models/Basket');
 
 const uri = `mongodb+srv://${credentials.databaseUser}:${credentials.databasePassword}@weppo.sew572t.mongodb.net/?retryWrites=true&w=majority`;
 
@@ -165,8 +166,41 @@ async function getUserData(username) {
   }
 }
 
+async function getUserBasket(username) {
+  try {
+    connectToClient();
+
+    const db = client.db("WEPPO");
+    const collection = db.collection('users');
+
+    const user = await collection.findOne({ username });
+    if (!user) {
+      console.log(`User '${username}' not found.`);
+      return;
+    }
+
+    console.log("User found:", user);
+
+    const collection2 = db.collection('baskets');
+    const basket = await collection2.findOne({ _id: user.basket });
+    if (basket) {
+      console.log("User basket:", basket);
+    } else {
+      console.log("User basket not found.");
+    }
+
+  } catch (error) {
+    console.error('Error getting user', error);
+  } finally {
+    closeClientConnection();
+  }
+}
+
+// Pobierz koszyk użytkownika
+getUserBasket('admin').catch(console.dir);
+
 // Pobierz dane pojedyńczego użytkownika
-getUserData('admin').catch(console.dir);
+//getUserData('admin').catch(console.dir);
 
 // Usuń użytkownika z bazy danych
 //deleteUser('admin').catch(console.dir);
