@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin panel | Nodeshop.io</title>
+  <link href="/styles.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+
+  <% include partials/navbar %>
+
+    <div class="min-h-[80vh] mt-[70px] flex flex-col items-center justify-center">
+      <h1 class="text-4xl font-bold mb-6">Hello, <%= user.username %>!</h1>
+      <div class="flex flex-col space-y-4">
+        <button id="viewUsersBtn" class="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">
+          View users
+        </button>
+        <button id="viewOrdersBtn" class="bg-green-500 text-white font-bold py-2 px-4 rounded hover:bg-green-700">
+          View orders
+        </button>
+        <button id="editProductsBtn" class="bg-red-500 text-white font-bold py-2 px-4 rounded hover:bg-red-700">
+          Edit product list
+        </button>
+      </div>
+    </div>
+
+    <% include partials/footer %>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+          document.getElementById('viewUsersBtn').addEventListener('click', () => {
+            window.location.href = '/admin/users';
+          });
+          document.getElementById('viewOrdersBtn').addEventListener('click', () => {
+            window.location.href = '/admin/orders';
+          });
+          document.getElementById('editProductsBtn').addEventListener('click', () => {
+            window.location.href = '/admin/products';
+          });
+        });
+      </script>
+
+</body>
+
+</html>

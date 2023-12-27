@@ -210,6 +210,20 @@ app.get('/sendOrder', async (req, res) => {
   res.redirect('/clearBasket');
 });
 
+/* # Render main admin panel */
+app.get('/admin', async (req, res) => {
+  if (req.session.user && req.session.user.role === 'admin') {
+    try {
+      res.render('admin', { user: req.session.user, currentPath: req.path });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Error in get /admin route');
+    }
+  } else {
+    res.redirect('/auth');
+  }
+});
+
 
 /* ### POST ROUTES ### */
 
