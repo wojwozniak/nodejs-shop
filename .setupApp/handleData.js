@@ -196,8 +196,43 @@ async function getUserBasket(username) {
   }
 }
 
+async function clearUserBasketContents(username) {
+  try {
+    connectToClient();
+
+    const db = client.db("WEPPO");
+    const collection = db.collection('users');
+
+    const user = await collection.findOne({ username });
+    if (!user) {
+      console.log(`User '${username}' not found.`);
+      return;
+    }
+
+    console.log("User found:", user);
+
+    const collection2 = db.collection('baskets');
+    const basket = await collection2.findOne({ _id: user.basket });
+    if (basket) {
+      console.log("User basket:", basket);
+      basket.items = [];
+      await collection2.updateOne({ _id: user.basket }, { $set: { items: [] } });
+    } else {
+      console.log("User basket not found.");
+    }
+
+  } catch (error) {
+    console.error('Error getting user', error);
+  } finally {
+    closeClientConnection();
+  }
+}
+
+// Wyczyść zawartość koszyka użytkownika
+//clearUserBasketContents('admin').catch(console.dir);
+
 // Pobierz koszyk użytkownika
-getUserBasket('admin').catch(console.dir);
+//getUserBasket('admin').catch(console.dir);
 
 // Pobierz dane pojedyńczego użytkownika
 //getUserData('admin').catch(console.dir);
