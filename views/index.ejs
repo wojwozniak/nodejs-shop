@@ -25,7 +25,7 @@
           <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
             <% products.forEach(product=> { %>
               <div
-                class="w-full flex flex-col items-center justify-center h-fit min-h-[500px] p-2 bg-white rounded-lg border shadow-md">
+                class="w-full flex flex-col items-center mb-4 justify-center h-fit min-h-[500px] p-2 bg-white rounded-lg border shadow-md">
                 <img class="rounded-lg" src="https://placehold.co/400x400" alt="Product Image" class="rounded-lg">
                 <div class="px-6 py-4">
                   <h3 class="font-bold text-xl mb-2 text-center">
@@ -47,13 +47,13 @@
                     <% } %>
                 </div>
               </div>
+              <% }); %>
           </div>
-          <% }); %>
-            <% if (products.length===0) { %>
-              <p class="text-red-500 text-center">
-                No products found. Change your search query to try again!
-              </p>
-              <% } %>
+          <% if (products.length===0) { %>
+            <p class="text-red-500 text-center">
+              No products found. Change your search query to try again!
+            </p>
+            <% } %>
     </div>
     </div>
     <% include partials/footer %>
