@@ -29,6 +29,9 @@ Main features required by the course:
 ### Home page
 ![Home page](./.about/screenshot.png)
 
+### Basket
+![Basket](./.about/screenshot2.png)
+
 ## Installation
 - Clone the repository
 - Install dependencies with `npm install`
