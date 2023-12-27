@@ -1,5 +1,5 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const credentials = require("./../credentials.json");
+const credentials = require("../credentials.json");
 const exampleProducts = require("./defaultProducts.json")
 
 async function connectToClient() {
@@ -72,8 +72,26 @@ const client = new MongoClient(uri, {
     }
 });
 
+async function getAllUsers() {
+    try {
+        connectToClient();
+
+        const db = client.db("WEPPO");
+        const collection = db.collection('users');
+
+        const products = await collection.find({}).toArray();
+        console.log("Users retrieved:", products);
+        return products;
+    } finally {
+        closeClientConnection();
+    }
+}
+
+// Pobierz wszystkich użytkowników z bazy danych
+getAllUsers().catch(console.dir);
+
 // Dodaj domyślne produkty do bazy danych
-addProducts().catch(console.dir);
+//addProducts().catch(console.dir);
 
 // Wyczyść bazę danych z produktów
 // clearProducts().catch(console.dir);
