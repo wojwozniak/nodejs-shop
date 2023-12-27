@@ -106,7 +106,7 @@ async function grantAdminRole(username) {
         const user = await collection.findOne({ username });
 
         if (!user) {
-            throw new Error(`User with username '${username}' not found.`);
+            throw new Error(`User '${username}' not found.`);
         }
 
         user.role = 'admin';
