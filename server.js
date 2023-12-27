@@ -5,6 +5,9 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const mongoose = require('mongoose');
+const User = require('./models/User');
+const bcrypt = require('bcrypt');
+const bodyParser = require('body-parser');
 
 /* # Setup views */
 app.set('view engine', 'ejs');
@@ -30,6 +33,10 @@ app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
 
+// Middleware used in login and registration routes
+app.use(bodyParser.urlencoded({ extended: true }));
+
+/* # Render root (product list) */
 app.get('/', async (req, res) => {
     try {
         const products = await Product.find({});
@@ -38,5 +45,44 @@ app.get('/', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Error occurred while fetching products');
+    }
+});
+
+/* # Render auth (login and registration) */
+app.get('/auth', (req, res) => {
+    res.render('auth');
+});
+
+
+
+
+
+/* ### POST ROUTES ### */
+
+
+
+/* # Login or register # */
+app.post('/auth', async (req, res) => {
+    if (req.body.action === 'register') {
+        try {
+            const newUser = new User(req.body);
+            await newUser.save();
+            res.redirect('/auth');
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Error occurred while registering');
+        }
+    } else if (req.body.action === 'login') {
+        try {
+            const user = await User.findOne({ username: req.body.username });
+            if (user && bcrypt.compareSync(req.body.password, user.password)) {
+                res.redirect('/');
+            } else {
+                res.status(401).send('Invalid credentials');
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Error occurred while logging in');
+        }
     }
 });
