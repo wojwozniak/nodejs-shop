@@ -77,7 +77,7 @@ app.get('/search', async (req, res) => {
 });
 
 /* # Render dashboard (user profile) or redirect to login/register */
-app.get('/dashboard', (req, res) => {s
+app.get('/dashboard', (req, res) => {
     if (req.session.user) {
         //console.log(req.session.user);
         res.render('dashboard', { user: req.session.user, currentPath: req.path });
