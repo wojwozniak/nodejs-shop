@@ -49,19 +49,21 @@ app.listen(port, () => {
 app.get('/', async (req, res) => {
     try {
         const products = await Product.find({});
-        //console.log("Products retrieved:", products);
-        res.render('index', { products });
+        console.log("Products retrieved:", products);
+        res.render('index', { products, user: req.session.user || null, currentPath: req.path });
     } catch (error) {
         console.error(error);
         res.status(500).send('Error occurred while fetching products');
     }
+
 });
 
 /* # Render dashboard (user profile) or redirect to login/register */
 app.get('/dashboard', (req, res) => {
+    console.log(req.session);
     if (req.session.user) {
         console.log(req.session.user);
-        res.render('dashboard', { user: req.session.user });
+        res.render('dashboard', { user: req.session.user, currentPath: req.path });
     } else {
         res.redirect('/auth');
     }
@@ -69,7 +71,7 @@ app.get('/dashboard', (req, res) => {
 
 /* # Render auth (login and registration) */
 app.get('/auth', (req, res) => {
-    res.render('auth');
+    res.render('auth', { user: req.session.user, currentPath: req.path });
 });
 
 /* # Logout # */
@@ -88,10 +90,14 @@ app.get('/logout', (req, res) => {
 app.post('/auth', async (req, res) => {
     if (req.body.action === 'register') {
         try {
-            // Check if user already exists
+            // Check if email is already in use
             const existingUser = await User.findOne({ email: req.body.email });
             if (existingUser) {
-                return res.status(400).send('Email already in use');
+                return res.status(400).send('Email already in use. Go back and try to log in instead!');
+            }
+            const existingUsername = await User.findOne({ username: req.body.username });
+            if (existingUsername) {
+                return res.status(400).send('Username already in use. Go back and try to log in instead!');
             }
 
             // Check if email is valid
@@ -111,6 +117,10 @@ app.post('/auth', async (req, res) => {
         try {
             const user = await User.findOne({ username: req.body.username });
             if (user && bcrypt.compareSync(req.body.password, user.password)) {
+                req.session.user = {
+                    username: user.username,
+                    email: user.email
+                };
                 res.redirect('/');
             } else {
                 res.status(401).send('Invalid credentials');
