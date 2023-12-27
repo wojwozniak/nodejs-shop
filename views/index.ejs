@@ -72,9 +72,7 @@
         window.location.href = `/search?query=${encodeURIComponent(searchTerm)}`;
       }
     });
-  });
 
-  document.addEventListener('DOMContentLoaded', function () {
     const buttons = document.querySelectorAll('.add-basket-btn');
     buttons.forEach(button => {
       button.addEventListener('click', function () {
