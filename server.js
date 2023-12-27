@@ -94,7 +94,21 @@ app.get('/addToBasket', async (req, res) => {
     //console.log("Product retrieved:", product);
     const basket = await Basket.findById(req.session.user.basket);
     //console.log("Basket retrieved:", basket);
-    basket.items.push(product);
+    basket.items = basket.items || [];
+    let productInBasket = false;
+    for (let item of basket.items) {
+      if (item._id.toString() === product.id) {
+        item.quantity += 1;
+        productInBasket = true;
+        break;
+      }
+    }
+    if (!productInBasket) {
+      basket.items.push({
+        _id: product._id,
+        quantity: 1
+      })
+    }
     //console.log("Basket after push:", basket);
     await basket.save();
     res.redirect('/');
