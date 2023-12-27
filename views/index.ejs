@@ -11,37 +11,40 @@
 <body class="bg-gray-100">
     <% include partials/navbar %>
 
-        <div class="container mx-auto mt-[70px]">
+        <div class="container mx-auto mt-[70px] px-4 lg:px-10">
             <div class="flex gap-4 w-full mb-4">
-                <input type="text" id="searchInput" placeholder="Search products...">
-                <button id="searchButton" class="bg-green-500 text-white px-4 py-2 rounded">Search</button>
+                <input type="text" id="searchInput" class="w-3/5" placeholder="Search products...">
+                <button id="searchButton" class="bg-green-500 w-2/5 text-white px-4 py-2 rounded">Search</button>
             </div>
             <% if (currentPath==='/search' ) { %>
                 <p class="text-gray-600 mb-[20px]">Search result for "<%= searchTerm %>". Click "Products" on the
                         navigation bar to go back to full list.</p>
                 <% } %>
-                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 justify-center">
                         <% products.forEach(product=> { %>
-                            <div class="max-w-sm rounded overflow-hidden shadow-lg">
-                                <img class="w-full" src="<%= product.image %>" alt="Product Image">
-                                <div class="px-6 py-4">
-                                    <div class="font-bold text-xl mb-2">
-                                        <%= product.name %>
+                            <div class="w-full flex flex-col items-center justify-center h-fit">
+                                <div class="max-w-sm rounded overflow-hidden shadow-lg h-[525px]">
+                                    <img class="w-full" src="https://placehold.co/400x400" alt="Product Image">
+                                    <div class="px-6 py-4">
+                                        <div class="font-bold text-xl mb-2 text-center">
+                                            <%= product.name %>
+                                        </div>
+                                        <p class="text-gray-700 text-base text-center">
+                                            <%= product.description %>
+                                        </p>
                                     </div>
-                                    <p class="text-gray-700 text-base">
-                                        <%= product.description %>
-                                    </p>
-                                </div>
-                                <div class="px-6 pt-4 pb-2">
-                                    <span
-                                        class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">Price:
-                                        $<%= product.price %></span>
-                                    <!-- Add to Basket Button -->
+                                    <div class="px-6 pt-4 pb-2 text-center">
+                                        <span
+                                            class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">Price:
+                                            $<%= product.price %></span>
+                                        <!-- Add to Basket Button -->
+                                    </div>
                                 </div>
                             </div>
                             <% }); %>
                                 <% if (products.length===0) { %>
-                                    <p class="text-red-500">No products found. Change your search query to try again!</p>
+                                    <p class="text-red-500 text-center">No products found. Change your search query to
+                                        try again!</p>
                                     <% } %>
                     </div>
         </div>
