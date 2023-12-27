@@ -29,6 +29,7 @@ async function connectToClient() {
 async function closeClientConnection() {
     try {
         await client.close();
+        console.log("Closed connection to MongoDB.");
     } catch (err) {
         console.log(err.stack);
     }
@@ -121,8 +122,54 @@ async function grantAdminRole(username) {
     }
 }
 
+async function deleteUser(username) {
+    try {
+        connectToClient();
+
+        const db = client.db("WEPPO");
+        const collection = db.collection('users');
+
+        const user = await collection.findOne({ username });
+
+        if (!user) {
+            throw new Error(`User '${username}' not found.`);
+        }
+
+        await collection.deleteOne({ username });
+        console.log(`User '${username}' account has been deleted.`);
+    } catch (error) {
+        console.error('Error deleting user account:', error);
+    } finally {
+        closeClientConnection();
+    }
+}
+
+async function getUserData(username) {
+    try {
+        connectToClient();
+
+        const db = client.db("WEPPO");
+        const collection = db.collection('users');
+
+        const user = await collection.findOne({ username });
+        if (user) {
+            console.log(`User '${username}' data:`, user);
+            return user;
+        }
+        console.log(`User '${username}' not found.`);
+
+    } catch (error) {
+        console.error('Error getting user', error);
+    } finally {
+        closeClientConnection();
+    }
+}
+
+// Usuń użytkownika z bazy danych
+deleteUser('admin').catch(console.dir);
+
 // Daj uprawnienia administratora użytkownikowi
-grantAdminRole('admin').catch(console.dir);
+//grantAdminRole('admin').catch(console.dir);
 
 // Pobierz wszystkich użytkowników z bazy danych
 //getAllUsers().catch(console.dir);
