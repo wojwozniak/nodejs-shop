@@ -53,9 +53,27 @@ app.get('/', async (req, res) => {
         res.render('index', { products, user: req.session.user || null, currentPath: req.path });
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error occurred while fetching products');
+        res.status(500).send('Error in get / route - fetch products');
     }
 
+});
+
+/* # Render search route (based on index.ejs) */
+app.get('/search', async (req, res) => {
+    try {
+        const searchTerm = req.query.query;
+        const products = await Product.find({
+            $or: [
+                { name: { $regex: searchTerm, $options: 'i' } },
+                { description: { $regex: searchTerm, $options: 'i' } }
+            ]
+        });
+        console.log("Products retrieved:", products);
+        res.render('index', { products, user: req.session.user || null, currentPath: req.path, searchTerm: searchTerm });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error in get /search route - fetch products');
+    }
 });
 
 /* # Render dashboard (user profile) or redirect to login/register */
@@ -80,7 +98,6 @@ app.get('/logout', (req, res) => {
         res.redirect('/auth');
     });
 });
-
 
 
 
@@ -111,7 +128,7 @@ app.post('/auth', async (req, res) => {
             res.redirect('/auth');
         } catch (error) {
             console.error(error);
-            res.status(500).send('Error occurred while registering');
+            res.status(500).send('Error in post /auth route - register user');
         }
     } else if (req.body.action === 'login') {
         try {
@@ -128,7 +145,7 @@ app.post('/auth', async (req, res) => {
             }
         } catch (error) {
             console.error(error);
-            res.status(500).send('Error occurred while logging in');
+            res.status(500).send('Error in post /auth route - login user');
         }
     }
 });
