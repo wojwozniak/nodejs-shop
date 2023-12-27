@@ -224,6 +224,20 @@ app.get('/admin', async (req, res) => {
   }
 });
 
+/* # Render admin panel for user list */
+app.get('/admin/users', async (req, res) => {
+  if (req.session.user && req.session.user.role === 'admin') {
+    try {
+      const users = await User.find({});
+      res.render('admin-users', { user: req.session.user, currentPath: req.path, users });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Error in get /admin/users route');
+    }
+  } else {
+    res.redirect('/auth');
+  }
+});
 
 /* ### POST ROUTES ### */
 
