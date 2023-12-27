@@ -1,16 +1,31 @@
+// Zbiór pomocniczych funkcji do obsługi bazy danych
+
+// Importy
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const credentials = require("../credentials.json");
-const exampleProducts = require("./defaultProducts.json")
+const exampleProducts = require("./defaultProducts.json");
 
+const uri = `mongodb+srv://${credentials.databaseUser}:${credentials.databasePassword}@weppo.sew572t.mongodb.net/?retryWrites=true&w=majority`;
+
+const client = new MongoClient(uri, {
+    serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+    }
+});
+
+// Łączenie z bazą danych
 async function connectToClient() {
     try {
         await client.connect();
-        console.log("Connected successfully to server");
+        console.log("Connected to MongoDB.");
     } catch (err) {
         console.log(err.stack);
     }
 }
 
+// Zamykanie połączenia z bazą danych
 async function closeClientConnection() {
     try {
         await client.close();
@@ -19,6 +34,7 @@ async function closeClientConnection() {
     }
 }
 
+// Dodawanie domyślnych produktów do bazy danych
 async function addProducts() {
     try {
         connectToClient();
@@ -27,12 +43,13 @@ async function addProducts() {
         const collection = db.collection('products');
 
         await collection.insertMany(exampleProducts);
-        console.log("Products added successfully");
+        console.log("Added default products to the database");
     } finally {
         closeClientConnection();
     }
 }
 
+// Usuwanie wszystkich produktów z bazy danych
 async function clearProducts() {
     try {
         connectToClient();
@@ -47,6 +64,7 @@ async function clearProducts() {
     }
 }
 
+// Pobieranie wszystkich produktów z bazy danych
 async function getAllProducts() {
     try {
         connectToClient();
@@ -62,16 +80,7 @@ async function getAllProducts() {
     }
 }
 
-const uri = `mongodb+srv://${credentials.databaseUser}:${credentials.databasePassword}@weppo.sew572t.mongodb.net/?retryWrites=true&w=majority`;
-
-const client = new MongoClient(uri, {
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-    }
-});
-
+// Pobieranie wszystkich użytkowników z bazy danych
 async function getAllUsers() {
     try {
         connectToClient();
@@ -87,8 +96,36 @@ async function getAllUsers() {
     }
 }
 
+async function grantAdminRole(username) {
+    try {
+        connectToClient();
+
+        const db = client.db("WEPPO");
+        const collection = db.collection('users');
+
+        const user = await collection.findOne({ username });
+
+        if (!user) {
+            throw new Error(`User with username '${username}' not found.`);
+        }
+
+        user.role = 'admin';
+
+        await collection.updateOne({ username }, { $set: { role: 'admin' } });
+
+        console.log(`User '${username}' has been granted the 'admin' role.`);
+    } catch (error) {
+        console.error('Error granting admin role:', error);
+    } finally {
+        closeClientConnection();
+    }
+}
+
+// Daj uprawnienia administratora użytkownikowi
+grantAdminRole('admin').catch(console.dir);
+
 // Pobierz wszystkich użytkowników z bazy danych
-getAllUsers().catch(console.dir);
+//getAllUsers().catch(console.dir);
 
 // Dodaj domyślne produkty do bazy danych
 //addProducts().catch(console.dir);
