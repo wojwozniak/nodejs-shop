@@ -93,9 +93,11 @@ app.get('/addToBasket', async (req, res) => {
     const product = await Product.findById(id);
     //console.log("Product retrieved:", product);
     const basket = await Basket.findById(req.session.user.basket);
-    console.log("Basket retrieved:", basket);
+    //console.log("Basket retrieved:", basket);
     basket.items.push(product);
+    //console.log("Basket after push:", basket);
     await basket.save();
+    res.redirect('/');
   } catch (error) {
     console.error(error);
     res.status(500).send('Error in get /addToBasket route - fetch product or save');
