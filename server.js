@@ -166,6 +166,13 @@ app.get('/logout', (req, res) => {
   });
 });
 
+/* # Clear basket */
+app.get('/clearBasket', async (req, res) => {
+  const basket = await Basket.findById(req.session.user.basket);
+  basket.items = [];
+  await basket.save();
+  res.redirect('/basket');
+});
 
 
 /* ### POST ROUTES ### */
