@@ -25,9 +25,9 @@
           <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-center">
             <% products.forEach(product=> { %>
               <div
-                class="w-full flex flex-col items-center mb-4 justify-center h-fit min-h-[500px] p-2 bg-white rounded-lg border shadow-md">
-                <img class="rounded-lg" src="https://placehold.co/400x400" alt="Product Image" class="rounded-lg">
-                <div class="px-6 py-4">
+                class="w-full flex flex-col items-center mb-4 justify-between h-[500px] p-2 bg-white rounded-lg border shadow-md">
+                <img class="rounded-lg" src="https://placehold.co/400x400" alt="Product Image">
+                <div class="px-6 py-4 flex flex-col justify-between flex-grow">
                   <h3 class="font-bold text-xl mb-2 text-center">
                     <%= product.name %>
                   </h3>
