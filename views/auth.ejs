@@ -14,19 +14,19 @@
         <div class="flex justify-center items-center h-screen">
             <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
                 <h3 class="mb-2">Register to use the shop</h3>
-                <form action="/auth" method="POST" class="mb-4">
+                <form action="/auth" method="POST">
                     <input type="hidden" name="action" value="register">
+                    <div class="mb-4">
+                        <input type="email" name="email" placeholder="Email"
+                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
                     <div class="mb-4">
                         <input type="text" name="username" placeholder="Username"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     </div>
-                    <div class="mb-4">
+                    <div class="mb-2">
                         <input type="password" name="password" placeholder="Password"
                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    </div>
-                    <div class="mb-2">
-                        <input type="email" name="email" placeholder="Email"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline">
                     </div>
                     <div class="flex items-center justify-between">
                         <button type="submit"
@@ -51,7 +51,6 @@
                     </div>
                 </form>
             </div>
-
 </body>
 
 </html>
