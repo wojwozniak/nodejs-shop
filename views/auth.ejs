@@ -2,55 +2,55 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Authorisation | Nodeshop.io</title>
-    <link href="/styles.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Authorisation | Nodeshop.io</title>
+  <link href="/styles.css" rel="stylesheet">
 </head>
 
 <body class="bg-gray-100">
 
-    <%- include('partials/navbar') %>
-        <div class="flex justify-center items-center h-screen">
-            <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                <h3 class="mb-2">Register to use the shop</h3>
-                <form action="/auth" method="POST">
-                    <input type="hidden" name="action" value="register">
-                    <div class="mb-4">
-                        <input type="email" name="email" placeholder="Email"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    </div>
-                    <div class="mb-4">
-                        <input type="text" name="username" placeholder="Username"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    </div>
-                    <div class="mb-2">
-                        <input type="password" name="password" placeholder="Password"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Register</button>
-                    </div>
-                </form>
+  <%- include('partials/navbar') %>
+    <div class="flex justify-center items-center h-screen">
+      <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <h3 class="mb-2">Register to use the shop</h3>
+        <form action="/auth" method="POST">
+          <input type="hidden" name="action" value="register">
+          <div class="mb-4">
+            <input type="email" name="email" placeholder="Email"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          </div>
+          <div class="mb-4">
+            <input type="text" name="username" placeholder="Username"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          </div>
+          <div class="mb-2">
+            <input type="password" name="password" placeholder="Password"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          </div>
+          <div class="flex items-center justify-between">
+            <button type="submit"
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Register</button>
+          </div>
+        </form>
 
-                <h3 class=" mt-[50px] mb-2">Already an user? Log in here</h3>
-                <form action="/auth" method="POST">
-                    <input type="hidden" name="action" value="login">
-                    <div class="mb-4">
-                        <input type="text" name="username" placeholder="Username"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    </div>
-                    <div class="mb-2">
-                        <input type="password" name="password" placeholder="Password"
-                            class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <button type="submit"
-                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Login</button>
-                    </div>
-                </form>
-            </div>
+        <h3 class=" mt-[50px] mb-2">Already an user? Log in here</h3>
+        <form action="/auth" method="POST">
+          <input type="hidden" name="action" value="login">
+          <div class="mb-4">
+            <input type="text" name="username" placeholder="Username"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          </div>
+          <div class="mb-2">
+            <input type="password" name="password" placeholder="Password"
+              class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+          </div>
+          <div class="flex items-center justify-between">
+            <button type="submit"
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Login</button>
+          </div>
+        </form>
+      </div>
 </body>
 
 </html>

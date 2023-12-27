@@ -8,161 +8,161 @@ const exampleProducts = require("./defaultProducts.json");
 const uri = `mongodb+srv://${credentials.databaseUser}:${credentials.databasePassword}@weppo.sew572t.mongodb.net/?retryWrites=true&w=majority`;
 
 const client = new MongoClient(uri, {
-    serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-    }
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
 });
 
 // Łączenie z bazą danych
 async function connectToClient() {
-    try {
-        await client.connect();
-        console.log("Connected to MongoDB.");
-    } catch (err) {
-        console.log(err.stack);
-    }
+  try {
+    await client.connect();
+    console.log("Connected to MongoDB.");
+  } catch (err) {
+    console.log(err.stack);
+  }
 }
 
 // Zamykanie połączenia z bazą danych
 async function closeClientConnection() {
-    try {
-        await client.close();
-        console.log("Closed connection to MongoDB.");
-    } catch (err) {
-        console.log(err.stack);
-    }
+  try {
+    await client.close();
+    console.log("Closed connection to MongoDB.");
+  } catch (err) {
+    console.log(err.stack);
+  }
 }
 
 // Dodawanie domyślnych produktów do bazy danych
 async function addProducts() {
-    try {
-        connectToClient();
+  try {
+    connectToClient();
 
-        const db = client.db("WEPPO");
-        const collection = db.collection('products');
+    const db = client.db("WEPPO");
+    const collection = db.collection('products');
 
-        await collection.insertMany(exampleProducts);
-        console.log("Added default products to the database");
-    } finally {
-        closeClientConnection();
-    }
+    await collection.insertMany(exampleProducts);
+    console.log("Added default products to the database");
+  } finally {
+    closeClientConnection();
+  }
 }
 
 // Usuwanie wszystkich produktów z bazy danych
 async function clearProducts() {
-    try {
-        connectToClient();
+  try {
+    connectToClient();
 
-        const db = client.db("WEPPO");
-        const collection = db.collection('products');
+    const db = client.db("WEPPO");
+    const collection = db.collection('products');
 
-        await collection.deleteMany({});
-        console.log("All products have been removed from the database");
-    } finally {
-        closeClientConnection();
-    }
+    await collection.deleteMany({});
+    console.log("All products have been removed from the database");
+  } finally {
+    closeClientConnection();
+  }
 }
 
 // Pobieranie wszystkich produktów z bazy danych
 async function getAllProducts() {
-    try {
-        connectToClient();
+  try {
+    connectToClient();
 
-        const db = client.db("WEPPO");
-        const collection = db.collection('products');
+    const db = client.db("WEPPO");
+    const collection = db.collection('products');
 
-        const products = await collection.find({}).toArray();
-        console.log("Products retrieved:", products);
-        return products;
-    } finally {
-        closeClientConnection();
-    }
+    const products = await collection.find({}).toArray();
+    console.log("Products retrieved:", products);
+    return products;
+  } finally {
+    closeClientConnection();
+  }
 }
 
 // Pobieranie wszystkich użytkowników z bazy danych
 async function getAllUsers() {
-    try {
-        connectToClient();
+  try {
+    connectToClient();
 
-        const db = client.db("WEPPO");
-        const collection = db.collection('users');
+    const db = client.db("WEPPO");
+    const collection = db.collection('users');
 
-        const products = await collection.find({}).toArray();
-        console.log("Users retrieved:", products);
-        return products;
-    } finally {
-        closeClientConnection();
-    }
+    const products = await collection.find({}).toArray();
+    console.log("Users retrieved:", products);
+    return products;
+  } finally {
+    closeClientConnection();
+  }
 }
 
 async function grantAdminRole(username) {
-    try {
-        connectToClient();
+  try {
+    connectToClient();
 
-        const db = client.db("WEPPO");
-        const collection = db.collection('users');
+    const db = client.db("WEPPO");
+    const collection = db.collection('users');
 
-        const user = await collection.findOne({ username });
+    const user = await collection.findOne({ username });
 
-        if (!user) {
-            throw new Error(`User '${username}' not found.`);
-        }
-
-        user.role = 'admin';
-
-        await collection.updateOne({ username }, { $set: { role: 'admin' } });
-
-        console.log(`User '${username}' has been granted the 'admin' role.`);
-    } catch (error) {
-        console.error('Error granting admin role:', error);
-    } finally {
-        closeClientConnection();
+    if (!user) {
+      throw new Error(`User '${username}' not found.`);
     }
+
+    user.role = 'admin';
+
+    await collection.updateOne({ username }, { $set: { role: 'admin' } });
+
+    console.log(`User '${username}' has been granted the 'admin' role.`);
+  } catch (error) {
+    console.error('Error granting admin role:', error);
+  } finally {
+    closeClientConnection();
+  }
 }
 
 async function deleteUser(username) {
-    try {
-        connectToClient();
+  try {
+    connectToClient();
 
-        const db = client.db("WEPPO");
-        const collection = db.collection('users');
+    const db = client.db("WEPPO");
+    const collection = db.collection('users');
 
-        const user = await collection.findOne({ username });
+    const user = await collection.findOne({ username });
 
-        if (!user) {
-            throw new Error(`User '${username}' not found.`);
-        }
-
-        await collection.deleteOne({ username });
-        console.log(`User '${username}' account has been deleted.`);
-    } catch (error) {
-        console.error('Error deleting user account:', error);
-    } finally {
-        closeClientConnection();
+    if (!user) {
+      throw new Error(`User '${username}' not found.`);
     }
+
+    await collection.deleteOne({ username });
+    console.log(`User '${username}' account has been deleted.`);
+  } catch (error) {
+    console.error('Error deleting user account:', error);
+  } finally {
+    closeClientConnection();
+  }
 }
 
 async function getUserData(username) {
-    try {
-        connectToClient();
+  try {
+    connectToClient();
 
-        const db = client.db("WEPPO");
-        const collection = db.collection('users');
+    const db = client.db("WEPPO");
+    const collection = db.collection('users');
 
-        const user = await collection.findOne({ username });
-        if (user) {
-            console.log(`User '${username}' data:`, user);
-            return user;
-        }
-        console.log(`User '${username}' not found.`);
-
-    } catch (error) {
-        console.error('Error getting user', error);
-    } finally {
-        closeClientConnection();
+    const user = await collection.findOne({ username });
+    if (user) {
+      console.log(`User '${username}' data:`, user);
+      return user;
     }
+    console.log(`User '${username}' not found.`);
+
+  } catch (error) {
+    console.error('Error getting user', error);
+  } finally {
+    closeClientConnection();
+  }
 }
 
 // Pobierz dane pojedyńczego użytkownika

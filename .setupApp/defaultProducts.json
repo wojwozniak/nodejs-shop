@@ -4,7 +4,7 @@
         "description": "High performance laptop",
         "price": 3999,
         "stock": 10,
-        "image": "path",
+        "kmage": "path",
         "category": "Electronics",
         "brand": "Aaaa"
     },
