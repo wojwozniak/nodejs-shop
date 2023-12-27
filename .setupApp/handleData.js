@@ -165,8 +165,11 @@ async function getUserData(username) {
     }
 }
 
+// Pobierz dane pojedyńczego użytkownika
+getUserData('admin').catch(console.dir);
+
 // Usuń użytkownika z bazy danych
-deleteUser('admin').catch(console.dir);
+//deleteUser('admin').catch(console.dir);
 
 // Daj uprawnienia administratora użytkownikowi
 //grantAdminRole('admin').catch(console.dir);
