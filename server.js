@@ -136,7 +136,8 @@ app.post('/auth', async (req, res) => {
                 req.session.user = {
                     username: user.username,
                     email: user.email,
-                    role: user.role
+                    role: user.role,
+                    basket: user.basket
                 };
                 res.redirect('/');
             } else {
