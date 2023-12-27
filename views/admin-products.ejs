@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product list | Nodeshop.io</title>
+  <link href="/styles.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+
+  <% include partials/navbar %>
+
+    <div class="container mx-auto p-4 mt-[70px] min-h-[80vh]">
+      <h1 class="text-4xl font-bold mb-6">Product List</h1>
+      <div class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <table class="table-auto w-full">
+          <thead>
+            <tr>
+              <th class="border px-4 py-2">Name</th>
+              <th class="border px-4 py-2">Description</th>
+              <th class="border px-4 py-2">Price</th>
+              <th class="border px-4 py-2">Stock</th>
+              <th class="border px-4 py-2">Image</th>
+              <th class="border px-4 py-2">Category</th>
+              <th class="border px-4 py-2">Brand</th>
+              <th class="border px-4 py-2">Edit</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% products.forEach(function(product) { %>
+              <tr>
+                <td class="border px-4 py-2">
+                  <%= product.name %>
+                </td>
+                <td class="border px-4 py-2">
+                  <%= product.description %>
+                </td>
+                <td class="border px-4 py-2">
+                  <%= product.price %>
+                </td>
+                <td class="border px-4 py-2">
+                  <%= product.stock %>
+                </td>
+                <td class="border px-4 py-2">
+                  <img src="<%= product.image %>" alt="<%= product.name %>" style="height: 50px;">
+                </td>
+                <td class="border px-4 py-2">
+                  <%= product.category %>
+                </td>
+                <td class="border px-4 py-2">
+                  <%= product.brand %>
+                </td>
+                <td class="border px-4 py-2">
+                  <button id="edit-<%= product._id %>"
+                    class="edit-btn bg-yellow-500 text-white font-bold py-1 px-3 rounded hover:bg-yellow-600">
+                    Edit
+                  </button>
+                </td>
+              </tr>
+              <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <% include partials/footer %>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const editButtons = document.querySelectorAll('.edit-btn');
+          editButtons.forEach(button => {
+            button.addEventListener('click', function () {
+              const productId = this.id.split('-')[1];
+              window.location.href = '/admin/edit-product?id=' + productId;
+            });
+          });
+        });
+      </script>
+
+</body>
+
+</html>

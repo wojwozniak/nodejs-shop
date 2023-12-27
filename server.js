@@ -287,6 +287,21 @@ app.get('/admin/orders', async (req, res) => {
   }
 });
 
+/* # Render admin panel for product list */
+app.get('/admin/products', async (req, res) => {
+  if (req.session.user && req.session.user.role === 'admin') {
+    try {
+      const products = await Product.find({});
+      res.render('admin-products', { user: req.session.user, currentPath: req.path, products });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Error in get /admin/products route');
+    }
+  } else {
+    res.redirect('/auth');
+  }
+});
+
 /* ### POST ROUTES ### */
 
 async function genUser(req) {
