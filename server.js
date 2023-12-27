@@ -1,14 +1,17 @@
-/* # Import */
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const credentials = require('./credentials.json');
+/* # Imports */
 const express = require('express');
 const app = express();
 const path = require('path');
-const mongoose = require('mongoose');
-const User = require('./models/User');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+
+/* # Imports for database */
+const credentials = require('./credentials.json');
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const mongoose = require('mongoose');
+const User = require('./models/User');
+const Basket = require('./models/Basket');
 
 /* # Setup session */
 app.use(session({
@@ -44,6 +47,10 @@ const port = 3000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
+
+
+
+/* ### GET ROUTES ### */
 
 /* # Render root (product list) */
 app.get('/', async (req, res) => {
@@ -86,6 +93,14 @@ app.get('/dashboard', (req, res) => {
     }
 });
 
+app.get('/basket', (req, res) => {
+    if (req.session.user) {
+        res.render('basket', { user: req.session.user, currentPath: req.path });
+    } else {
+        res.redirect('/auth');
+    }
+});
+
 /* # Render auth (login and registration) */
 app.get('/auth', (req, res) => {
     res.render('auth', { user: req.session.user, currentPath: req.path });
@@ -101,6 +116,21 @@ app.get('/logout', (req, res) => {
 
 
 /* ### POST ROUTES ### */
+
+async function genUser(req) {
+    // Generate basket
+    const newBasket = new Basket({
+        items: []
+    });
+    await newBasket.save();
+
+    const newUser = new User({
+        ...req.body,
+        basket: newBasket._id
+    });
+
+    await newUser.save();
+}
 
 /* # Login or register # */
 app.post('/auth', async (req, res) => {
@@ -121,9 +151,7 @@ app.post('/auth', async (req, res) => {
                 return res.status(400).send('Invalid email format');
             }
 
-            // Create new user
-            const newUser = new User(req.body);
-            await newUser.save();
+            genUser(req);
             res.redirect('/auth');
         } catch (error) {
             console.error(error);
