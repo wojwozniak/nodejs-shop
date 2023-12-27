@@ -1,14 +1,14 @@
-<nav class="bg-white shadow-lg fixed top-0 left-0 w-full">
-    <div class="w-full mx-auto px-6">
-        <div class="flex justify-between">
-            <div class="flex space-x-7">
+<nav class="bg-white shadow-lg fixed top-0 left-0 w-full h-[60px]">
+    <div class="w-full mx-auto px-6 h-[60px]">
+        <div class="flex justify-between h-[60px]">
+            <div class="flex space-x-7 h-[60px]">
                 <span class="font-semibold text-gray-500 py-4 text-lg">Nodeshop.io</span>
-                <div class="flex items-center space-x-1">
+                <div class="flex items-center space-x-1 h-fit">
                     <a href="/"
                         class="py-4 px-2 text-gray-500 font-semibold <%= currentPath === '/' ? 'border-b-4 border-green-500' : '' %> hover:text-green-500 transition duration-300">
                         Products
                     </a>
-                    <a href="#"
+                    <a href="basket"
                         class="py-4 px-2 text-gray-500 font-semibold <%= currentPath === '/basket' ? 'border-b-4 border-green-500' : '' %> hover:text-green-500 transition duration-300">
                         Basket
                     </a>
@@ -18,12 +18,18 @@
                     </a>
                 </div>
             </div>
-            <div class="flex py-4 px-2">
-                <% if (user && user.username) { %>
-                    <%= user.username %>
-                        <% } else { %>
-                            Not logged in
-                            <% } %>
+            <div class="flex py-4 h-[60px] items-center justify-center w-fit px-2 flex-row gap-4">
+                <% if (user && user.role==='admin' ) { %>
+                    <a href="admin"
+                        class="py-4 h-fit px-2 text-gray-500 font-semibold <%= currentPath === '/admin' ? 'border-b-4 border-green-500' : '' %> hover:text-green-500 transition duration-300">
+                        Admin Dashboard
+                    </a>
+                    <% } %>
+                        <% if (user && user.username) { %>
+                            <%= user.username %>
+                                <% } else { %>
+                                    Not logged in
+                                    <% } %>
             </div>
         </div>
     </div>
