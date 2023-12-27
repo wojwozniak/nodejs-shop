@@ -83,6 +83,25 @@ app.get('/search', async (req, res) => {
   }
 });
 
+/* # Render add to basket route */
+app.get('/addToBasket', async (req, res) => {
+  try {
+    if (!req.session.user) {
+      return res.redirect('/auth');
+    }
+    const id = req.query.id;
+    const product = await Product.findById(id);
+    //console.log("Product retrieved:", product);
+    const basket = await Basket.findById(req.session.user.basket);
+    console.log("Basket retrieved:", basket);
+    basket.items.push(product);
+    await basket.save();
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error in get /addToBasket route - fetch product or save');
+  }
+});
+
 /* # Render dashboard (user profile) or redirect to login/register */
 app.get('/dashboard', (req, res) => {
   if (req.session.user) {
