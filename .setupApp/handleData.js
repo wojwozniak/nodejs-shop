@@ -232,7 +232,7 @@ async function clearUserBasketContents(username) {
 //clearUserBasketContents('admin').catch(console.dir);
 
 // Pobierz koszyk użytkownika
-//getUserBasket('admin').catch(console.dir);
+getUserBasket('admin').catch(console.dir);
 
 // Pobierz dane pojedyńczego użytkownika
 //getUserData('admin').catch(console.dir);
