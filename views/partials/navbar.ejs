@@ -8,11 +8,11 @@
             class="py-4 px-2 text-gray-500 font-semibold <%= currentPath === '/' ? 'border-b-4 border-green-500' : '' %> hover:text-green-500 transition duration-300">
             Products
           </a>
-          <a href="basket"
+          <a href="/basket"
             class="py-4 px-2 text-gray-500 font-semibold <%= currentPath === '/basket' ? 'border-b-4 border-green-500' : '' %> hover:text-green-500 transition duration-300">
             Basket
           </a>
-          <a href="dashboard"
+          <a href="/dashboard"
             class="py-4 px-2 text-gray-500 font-semibold <%= currentPath === '/dashboard' || currentPath === '/auth' ? 'border-b-4 border-green-500' : '' %> hover:text-green-500 transition duration-300">
             Account
           </a>
@@ -20,7 +20,7 @@
       </div>
       <div class="flex py-4 h-[60px] items-center justify-center w-fit px-2 flex-row gap-4">
         <% if (user && user.role==='admin' ) { %>
-          <a href="admin"
+          <a href="/admin"
             class="py-4 h-fit px-2 text-gray-500 font-semibold <%= currentPath === '/admin' ? 'border-b-4 border-green-500' : '' %> hover:text-green-500 transition duration-300">
             Admin Dashboard
           </a>
