@@ -44,6 +44,10 @@
                     class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                     Total
                   </th>
+                  <th
+                    class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase w-8">
+                    Delete
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -64,6 +68,15 @@
                           <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                             $<%= itemTotal.toFixed(2) %>
                           </td>
+                          <td
+                            class="py-5 border-b border-gray-200 bg-white text-sm w-8">
+                            <a href="/removeFromBasket?id=<%= item.id %>" class="flex items-center justify-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500 hover:text-red-700"
+                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            </a>
                         </tr>
                         <% }); %>
               </tbody>

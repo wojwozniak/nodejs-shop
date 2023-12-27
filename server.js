@@ -119,6 +119,29 @@ app.get('/addToBasket', async (req, res) => {
   }
 });
 
+/* # Render remove from basket route */
+app.get('/removeFromBasket', async (req, res) => {
+  try {
+    if (!req.session.user) {
+      return res.redirect('/auth');
+    }
+    const id = req.query.id;
+    const basket = await Basket.findById(req.session.user.basket);
+    basket.items = basket.items || [];
+    for (let i = 0; i < basket.items.length; i++) {
+      if (basket.items[i]._id.toString() === id) {
+        basket.items.splice(i, 1);
+        break;
+      }
+    }
+    await basket.save();
+    res.redirect('/basket');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error in get /removeFromBasket route - fetch product or save');
+  }
+});
+
 /* # Render dashboard (user profile) or redirect to login/register */
 app.get('/dashboard', (req, res) => {
   if (req.session.user) {
@@ -138,6 +161,7 @@ app.get('/basket', async (req, res) => {
       for (let item of basket.items) {
         const product = products.find(product => product._id.toString() === item._id.toString());
         checkoutData.push({
+          id: product._id.toString(),
           name: product.name,
           quantity: item.quantity,
           price: product.price
