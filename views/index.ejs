@@ -17,7 +17,8 @@
                 <button id="searchButton" class="bg-green-500 text-white px-4 py-2 rounded">Search</button>
             </div>
             <% if (currentPath==='/search' ) { %>
-                <p class="text-gray-600 mb-[20px]">Search result for "<%= searchTerm %>". Click "Products" on the navigation bar to go back to full list.</p>
+                <p class="text-gray-600 mb-[20px]">Search result for "<%= searchTerm %>". Click "Products" on the
+                        navigation bar to go back to full list.</p>
                 <% } %>
                     <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         <% products.forEach(product=> { %>
@@ -39,6 +40,9 @@
                                 </div>
                             </div>
                             <% }); %>
+                                <% if (products.length===0) { %>
+                                    <p class="text-red-500">No products found. Change your search query to try again!</p>
+                                    <% } %>
                     </div>
         </div>
 </body>
