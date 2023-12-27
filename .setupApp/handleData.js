@@ -228,11 +228,30 @@ async function clearUserBasketContents(username) {
   }
 }
 
+async function getSentOrders() {
+  try {
+    connectToClient();
+
+    const db = client.db("WEPPO");
+    const collection = db.collection('orders');
+
+    const orders = await collection.find({}).toArray();
+    console.log("Orders retrieved:", orders);
+    console.log("Items in first order:", orders[0].items);
+    return orders;
+  } finally {
+    closeClientConnection();
+  }
+}
+
+// Wysłane zamówienia
+getSentOrders().catch(console.dir);
+
 // Wyczyść zawartość koszyka użytkownika
 //clearUserBasketContents('admin').catch(console.dir);
 
 // Pobierz koszyk użytkownika
-getUserBasket('admin').catch(console.dir);
+//getUserBasket('admin').catch(console.dir);
 
 // Pobierz dane pojedyńczego użytkownika
 //getUserData('admin').catch(console.dir);

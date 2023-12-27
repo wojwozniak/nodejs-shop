@@ -12,6 +12,7 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 const mongoose = require('mongoose');
 const User = require('./models/User');
 const Basket = require('./models/Basket');
+const Order = require('./models/Order');
 
 /* # Setup session */
 app.use(session({
@@ -172,6 +173,17 @@ app.get('/clearBasket', async (req, res) => {
   basket.items = [];
   await basket.save();
   res.redirect('/basket');
+});
+
+/* # Checkout */
+app.get('/sendOrder', async (req, res) => {
+  const newOrder = new Order({
+    items: (await Basket.findById(req.session.user.basket)).items,
+    user: req.session.user._id,
+    date: new Date()
+  });
+  await newOrder.save();
+  res.redirect('/clearBasket');
 });
 
 
