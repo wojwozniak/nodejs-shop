@@ -1,7 +1,7 @@
 function authorize(requiredLevel) {
   return function (req, res, next) {
-    const user = req.body.user;
-    const userLevel = 0;
+    const user = req.session.user;
+    let userLevel = 0;
     if (user) {
       userLevel = 1;
     }
@@ -10,8 +10,10 @@ function authorize(requiredLevel) {
     }
 
     if (userLevel >= requiredLevel) {
+      console.log("User has level " + userLevel + " and is authorized.");
       next();
     } else {
+      console.log("User has level " + userLevel + " and is not authorized. - redirecting to /auth");
       res.redirect('/auth');
     }
   };
