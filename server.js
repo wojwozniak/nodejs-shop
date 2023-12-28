@@ -21,7 +21,7 @@ app.use(session({
   cookie: { secure: false }
 }));
 
-// Middleware used in login and registration routes
+/* # Setup body parser */
 app.use(bodyParser.urlencoded({ extended: true }));
 
 /* # Setup views */
@@ -139,6 +139,7 @@ app.get('/removeFromBasket', authorize(1), async (req, res) => {
 /* # Render dashboard (user profile) or redirect to login/register */
 app.get('/dashboard', authorize(1), (req, res) => res.render('dashboard', { user: req.session.user, currentPath: req.path }));
 
+/* # Render basket */
 app.get('/basket', authorize(1), async (req, res) => {
   try {
     const basket = await Basket.findById(req.session.user.basket);
