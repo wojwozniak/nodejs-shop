@@ -13,8 +13,10 @@
   <% include partials/navbar %>
 
     <div class="container mx-auto p-4 mt-[70px] min-h-[80vh]">
-      <h1 class="text-4xl font-bold mb-6"><%= product ? "Edit Product" : "Add product" %></h1>
-      <form action="<%= product ? '/save-product/' + product._id : '/add-product' %>" method="post"
+      <h1 class="text-4xl font-bold mb-6">
+        <%= product ? "Edit Product" : "Add product" %>
+      </h1>
+      <form action="<%= product ? '/admin/edit-product?id=' + product._id : '/admin/add-product' %>" method="post"
         class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
         <!-- Name -->
         <div class="mb-4">
@@ -89,7 +91,16 @@
 
         document.getElementById('deleteBtn').addEventListener('click', function () {
           if (confirm('Are you sure you want to delete this product?')) {
-            window.location.href = '/delete-product/' + '<%= product ? product._id : "" %>';
+            let productId = '<%= product ? product._id : "" %>';
+
+            let form = document.createElement('form');
+            form.method = 'post';
+            form.action = '/admin/delete-product?id=' + productId;
+
+            document.body.appendChild(form);
+            form.submit();
+
+            form.remove();
           }
         });
       </script>

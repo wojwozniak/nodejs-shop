@@ -327,3 +327,49 @@ app.post('/auth', async (req, res) => {
     }
   }
 });
+
+/* # Add product # */
+app.post('/admin/add-product', authorize(2), async (req, res) => {
+  try {
+    const newProduct = new Product({
+      ...req.body
+    });
+    await newProduct.save();
+    res.redirect('/admin/products');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error in post /admin/add-product route');
+  }
+});
+
+/* # Edit product # */
+app.post('/admin/edit-product', authorize(2), async (req, res) => {
+  try {
+    const id = req.query.id;
+    const product = await Product.findById(id);
+    product.name = req.body.name;
+    product.description = req.body.description;
+    product.image = req.body.image;
+    product.category = req.body.category;
+    product.quantity = req.body.quantity;
+    product.price = req.body.price;
+    product.brand = req.body.brand;
+    await product.save();
+    res.redirect('/admin/products');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error in post /admin/edit-product route');
+  }
+});
+
+/* # Delete product # */
+app.post('/admin/delete-product', authorize(2), async (req, res) => {
+  try {
+    const id = req.query.id;
+    await Product.findByIdAndDelete(id);
+    res.redirect('/admin/products');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error in post /admin/delete-product route');
+  }
+});
