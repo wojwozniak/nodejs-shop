@@ -50,6 +50,9 @@ app.listen(port, () => {
 const genUser = require('./functions/genUser');
 const convertDateString = require('./functions/convertDateString');
 
+
+const authorize = require('./middleware/authorize');
+
 /* ### GET ROUTES ### */
 
 /* # Render root (product list) */
@@ -84,16 +87,11 @@ app.get('/search', async (req, res) => {
 });
 
 /* # Render add to basket route */
-app.get('/addToBasket', async (req, res) => {
+app.get('/addToBasket', authorize(1), async (req, res) => {
   try {
-    if (!req.session.user) {
-      return res.redirect('/auth');
-    }
     const id = req.query.id;
     const product = await Product.findById(id);
-    //console.log("Product retrieved:", product);
     const basket = await Basket.findById(req.session.user.basket);
-    //console.log("Basket retrieved:", basket);
     basket.items = basket.items || [];
     let productInBasket = false;
     for (let item of basket.items) {
@@ -119,11 +117,8 @@ app.get('/addToBasket', async (req, res) => {
 });
 
 /* # Render remove from basket route */
-app.get('/removeFromBasket', async (req, res) => {
+app.get('/removeFromBasket', authorize(1), async (req, res) => {
   try {
-    if (!req.session.user) {
-      return res.redirect('/auth');
-    }
     const id = req.query.id;
     const basket = await Basket.findById(req.session.user.basket);
     basket.items = basket.items || [];
@@ -142,39 +137,27 @@ app.get('/removeFromBasket', async (req, res) => {
 });
 
 /* # Render dashboard (user profile) or redirect to login/register */
-app.get('/dashboard', (req, res) => {
-  if (req.session.user) {
-    //console.log(req.session.user);
-    res.render('dashboard', { user: req.session.user, currentPath: req.path });
-  } else {
-    res.redirect('/auth');
-  }
-});
+app.get('/dashboard', authorize(1), (req, res) => res.render('dashboard', { user: req.session.user, currentPath: req.path }));
 
-app.get('/basket', async (req, res) => {
-  if (req.session.user) {
-    try {
-      const basket = await Basket.findById(req.session.user.basket);
-      const products = await Product.find({});
-      const checkoutData = [];
-      for (let item of basket.items) {
-        const product = products.find(product => product._id.toString() === item._id.toString());
-        checkoutData.push({
-          id: product._id.toString(),
-          name: product.name,
-          quantity: item.quantity,
-          price: product.price
-        });
-      }
-
-      res.render('basket', { user: req.session.user, currentPath: req.path, basket: checkoutData });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Error in get /basket route - fetch basket');
+app.get('/basket', authorize(1), async (req, res) => {
+  try {
+    const basket = await Basket.findById(req.session.user.basket);
+    const products = await Product.find({});
+    const checkoutData = [];
+    for (let item of basket.items) {
+      const product = products.find(product => product._id.toString() === item._id.toString());
+      checkoutData.push({
+        id: product._id.toString(),
+        name: product.name,
+        quantity: item.quantity,
+        price: product.price
+      });
     }
 
-  } else {
-    res.redirect('/auth');
+    res.render('basket', { user: req.session.user, currentPath: req.path, basket: checkoutData });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error in get /basket route - fetch basket');
   }
 });
 
@@ -191,7 +174,7 @@ app.get('/logout', (req, res) => {
 });
 
 /* # Clear basket */
-app.get('/clearBasket', async (req, res) => {
+app.get('/clearBasket', authorize(1), async (req, res) => {
   const basket = await Basket.findById(req.session.user.basket);
   basket.items = [];
   await basket.save();
@@ -199,7 +182,7 @@ app.get('/clearBasket', async (req, res) => {
 });
 
 /* # Checkout */
-app.get('/sendOrder', async (req, res) => {
+app.get('/sendOrder', authorize(1), async (req, res) => {
   const user = req.session.user.username;
   const newOrder = new Order({
     items: (await Basket.findById(req.session.user.basket)).items,
@@ -215,109 +198,85 @@ app.get('/sendOrder', async (req, res) => {
 });
 
 /* # Render main admin panel */
-app.get('/admin', async (req, res) => {
-  if (req.session.user && req.session.user.role === 'admin') {
-    try {
-      res.render('admin', { user: req.session.user, currentPath: req.path });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Error in get /admin route');
-    }
-  } else {
-    res.redirect('/auth');
+app.get('/admin', authorize(2), async (req, res) => {
+  try {
+    res.render('admin', { user: req.session.user, currentPath: req.path });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error in get /admin route');
   }
 });
 
 /* # Render admin panel for user list */
-app.get('/admin/users', async (req, res) => {
-  if (req.session.user && req.session.user.role === 'admin') {
-    try {
-      const users = await User.find({});
-      res.render('admin-users', { user: req.session.user, currentPath: req.path, users });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Error in get /admin/users route');
-    }
-  } else {
-    res.redirect('/auth');
+app.get('/admin/users', authorize(2), async (req, res) => {
+  try {
+    const users = await User.find({});
+    res.render('admin-users', { user: req.session.user, currentPath: req.path, users });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error in get /admin/users route');
   }
 });
 
 /* # Render admin panel for order list */
-app.get('/admin/orders', async (req, res) => {
-  if (req.session.user && req.session.user.role === 'admin') {
-    try {
-      const orders = await Order.find({});
-      const products = await Product.find({});
-      let data = [];
-      console.log(orders);
-      for (let order of orders) {
-        const items = [];
-        for (let item of order.items) {
-          const product = products.find(product => product._id.toString() === item._id.toString());
-          items.push({
-            name: product.name,
-            quantity: item.quantity
-          });
-        }
-        data.push({
-          username: order.user,
-          items,
-          date: convertDateString(order.date)
+app.get('/admin/orders', authorize(2), async (req, res) => {
+  try {
+    const orders = await Order.find({});
+    const products = await Product.find({});
+    let data = [];
+    console.log(orders);
+    for (let order of orders) {
+      const items = [];
+      for (let item of order.items) {
+        const product = products.find(product => product._id.toString() === item._id.toString());
+        items.push({
+          name: product.name,
+          quantity: item.quantity
         });
       }
-
-      res.render('admin-orders', { user: req.session.user, currentPath: req.path, orders: data });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Error in get /admin/orders route');
+      data.push({
+        username: order.user,
+        items,
+        date: convertDateString(order.date)
+      });
     }
-  } else {
-    res.redirect('/auth');
+
+    res.render('admin-orders', { user: req.session.user, currentPath: req.path, orders: data });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error in get /admin/orders route');
   }
 });
 
 /* # Render admin panel for product list */
-app.get('/admin/products', async (req, res) => {
-  if (req.session.user && req.session.user.role === 'admin') {
-    try {
-      const products = await Product.find({});
-      res.render('admin-products', { user: req.session.user, currentPath: req.path, products });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Error in get /admin/products route');
-    }
-  } else {
-    res.redirect('/auth');
+app.get('/admin/products', authorize(2), async (req, res) => {
+  try {
+    const products = await Product.find({});
+    res.render('admin-products', { user: req.session.user, currentPath: req.path, products });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error in get /admin/products route');
   }
 });
 
 /* # Render admin panel for editing product */
-app.get('/admin/edit-product', async (req, res) => {
-  if (req.session.user && req.session.user.role === 'admin') {
-    try {
-      const product = await Product.findById(req.query.id);
-      res.render('admin-edit-product', { user: req.session.user, currentPath: req.path, product });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Error in get /admin/edit-product route');
-    }
-  } else {
-    res.redirect('/auth');
+app.get('/admin/edit-product', authorize(2), async (req, res) => {
+  try {
+    const product = await Product.findById(req.query.id);
+    res.render('admin-edit-product', { user: req.session.user, currentPath: req.path, product });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error in get /admin/edit-product route');
   }
 });
 
 /* # Render admin panel for adding product */
-app.get('/admin/add-product', async (req, res) => {
-  if (req.session.user && req.session.user.role === 'admin') {
-    try {
-      res.render('admin-edit-product', { user: req.session.user, currentPath: req.path, product: null });
-    } catch (error) {
-      console.error(error);
-      res.status(500).send('Error in get /admin/add-product route');
-    }
-  } else {
-    res.redirect('/auth');
+app.get('/admin/add-product', authorize(2), async (req, res) => {
+  try {
+    res.render('admin-edit-product', { user: req.session.user, currentPath: req.path, product: null });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error in get /admin/add-product route');
   }
 });
 
