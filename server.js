@@ -317,6 +317,22 @@ app.get('/admin/edit-product', async (req, res) => {
   }
 });
 
+/* # Render admin panel for adding product */
+app.get('/admin/add-product', async (req, res) => {
+  if (req.session.user && req.session.user.role === 'admin') {
+    try {
+      res.render('admin-edit-product', { user: req.session.user, currentPath: req.path, product: null });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send('Error in get /admin/add-product route');
+    }
+  } else {
+    res.redirect('/auth');
+  }
+});
+
+
+
 /* ### POST ROUTES ### */
 
 async function genUser(req) {
