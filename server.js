@@ -46,7 +46,9 @@ app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
-
+/* # Helper functions */
+const genUser = require('./functions/genUser');
+const convertDateString = require('./functions/convertDateString');
 
 /* ### GET ROUTES ### */
 
@@ -241,18 +243,6 @@ app.get('/admin/users', async (req, res) => {
   }
 });
 
-function convertDateString(input) {
-  const date = new Date(input);
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const seconds = String(date.getSeconds()).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
-
-  return `${hours}:${minutes}:${seconds}, ${day}.${month}.${year}`;
-}
-
 /* # Render admin panel for order list */
 app.get('/admin/orders', async (req, res) => {
   if (req.session.user && req.session.user.role === 'admin') {
@@ -331,24 +321,7 @@ app.get('/admin/add-product', async (req, res) => {
   }
 });
 
-
-
 /* ### POST ROUTES ### */
-
-async function genUser(req) {
-  // Generate basket
-  const newBasket = new Basket({
-    items: []
-  });
-  await newBasket.save();
-
-  const newUser = new User({
-    ...req.body,
-    basket: newBasket._id
-  });
-
-  await newUser.save();
-}
 
 /* # Login or register # */
 app.post('/auth', async (req, res) => {
