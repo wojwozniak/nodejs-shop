@@ -102,15 +102,29 @@
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('clearBasketButton').onclick = function () {
-      alert('Basket cleared!');
-      window.location.href = '/clearBasket';
+      if (confirm('Do you really want to clear basket?')) {
+        let form = document.createElement('form');
+        form.method = 'post';
+        form.action = '/clearBasket';
+        document.body.appendChild(form);
+        form.submit();
+        form.remove();
+        alert('Basket cleared!');
+      }
     };
   });
 
   document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('checkoutButton').onclick = function () {
-      alert('Order sent!');
-      window.location.href = '/sendOrder';
+      if (confirm('Do you really want to send order?')) {
+        let form = document.createElement('form');
+        form.method = 'post';
+        form.action = '/sendOrder';
+        document.body.appendChild(form);
+        form.submit();
+        form.remove();
+        alert('Order sent!');
+      }
     };
   });
 </script>
