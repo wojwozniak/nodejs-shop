@@ -1,3 +1,11 @@
+/* ##### GENERAL APP SETUP ##### */
+//
+//
+//
+//
+//
+//
+
 /* # Imports */
 const express = require('express');
 const app = express();
@@ -54,6 +62,16 @@ const convertDateString = require('./functions/convertDateString');
 const authorize = require('./middleware/authorize');
 
 /* ### GET ROUTES ### */
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* # Render root (product list) */
 app.get('/', async (req, res) => {
@@ -86,56 +104,6 @@ app.get('/search', async (req, res) => {
   }
 });
 
-/* # Render add to basket route */
-app.get('/addToBasket', authorize(1), async (req, res) => {
-  try {
-    const id = req.query.id;
-    const product = await Product.findById(id);
-    const basket = await Basket.findById(req.session.user.basket);
-    basket.items = basket.items || [];
-    let productInBasket = false;
-    for (let item of basket.items) {
-      if (item._id.toString() === product.id) {
-        item.quantity += 1;
-        productInBasket = true;
-        break;
-      }
-    }
-    if (!productInBasket) {
-      basket.items.push({
-        _id: product._id,
-        quantity: 1
-      })
-    }
-    //console.log("Basket after push:", basket);
-    await basket.save();
-    res.redirect('/');
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error in get /addToBasket route - fetch product or save');
-  }
-});
-
-/* # Render remove from basket route */
-app.get('/removeFromBasket', authorize(1), async (req, res) => {
-  try {
-    const id = req.query.id;
-    const basket = await Basket.findById(req.session.user.basket);
-    basket.items = basket.items || [];
-    for (let i = 0; i < basket.items.length; i++) {
-      if (basket.items[i]._id.toString() === id) {
-        basket.items.splice(i, 1);
-        break;
-      }
-    }
-    await basket.save();
-    res.redirect('/basket');
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error in get /removeFromBasket route - fetch product or save');
-  }
-});
-
 /* # Render dashboard (user profile) or redirect to login/register */
 app.get('/dashboard', authorize(1), (req, res) => res.render('dashboard', { user: req.session.user, currentPath: req.path }));
 
@@ -165,37 +133,6 @@ app.get('/basket', authorize(1), async (req, res) => {
 /* # Render auth (login and registration) */
 app.get('/auth', (req, res) => {
   res.render('auth', { user: req.session.user, currentPath: req.path });
-});
-
-/* # Logout # */
-app.get('/logout', (req, res) => {
-  req.session.destroy((err) => {
-    res.redirect('/auth');
-  });
-});
-
-/* # Clear basket */
-app.get('/clearBasket', authorize(1), async (req, res) => {
-  const basket = await Basket.findById(req.session.user.basket);
-  basket.items = [];
-  await basket.save();
-  res.redirect('/basket');
-});
-
-/* # Checkout */
-app.get('/sendOrder', authorize(1), async (req, res) => {
-  const user = req.session.user.username;
-  const newOrder = new Order({
-    items: (await Basket.findById(req.session.user.basket)).items,
-    user: user,
-    date: new Date()
-  });
-  //console.log(newOrder);
-  if (!newOrder.items.length) {
-    return res.redirect('/basket');
-  }
-  await newOrder.save();
-  res.redirect('/clearBasket');
 });
 
 /* # Render main admin panel */
@@ -282,6 +219,18 @@ app.get('/admin/add-product', authorize(2), async (req, res) => {
 });
 
 /* ### POST ROUTES ### */
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* # Login or register # */
 app.post('/auth', async (req, res) => {
@@ -372,5 +321,86 @@ app.post('/admin/delete-product', authorize(2), async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send('Error in post /admin/delete-product route');
+  }
+});
+
+/* # Logout # */
+app.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    res.redirect('/auth');
+  });
+});
+
+/* # Clear basket */
+app.get('/clearBasket', authorize(1), async (req, res) => {
+  const basket = await Basket.findById(req.session.user.basket);
+  basket.items = [];
+  await basket.save();
+  res.redirect('/basket');
+});
+
+/* # Checkout */
+app.get('/sendOrder', authorize(1), async (req, res) => {
+  const user = req.session.user.username;
+  const newOrder = new Order({
+    items: (await Basket.findById(req.session.user.basket)).items,
+    user: user,
+    date: new Date()
+  });
+  //console.log(newOrder);
+  if (!newOrder.items.length) {
+    return res.redirect('/basket');
+  }
+  await newOrder.save();
+  res.redirect('/clearBasket');
+});
+
+/* # Render add to basket route */
+app.get('/addToBasket', authorize(1), async (req, res) => {
+  try {
+    const id = req.query.id;
+    const product = await Product.findById(id);
+    const basket = await Basket.findById(req.session.user.basket);
+    basket.items = basket.items || [];
+    let productInBasket = false;
+    for (let item of basket.items) {
+      if (item._id.toString() === product.id) {
+        item.quantity += 1;
+        productInBasket = true;
+        break;
+      }
+    }
+    if (!productInBasket) {
+      basket.items.push({
+        _id: product._id,
+        quantity: 1
+      })
+    }
+    //console.log("Basket after push:", basket);
+    await basket.save();
+    res.redirect('/');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error in get /addToBasket route - fetch product or save');
+  }
+});
+
+/* # Render remove from basket route */
+app.get('/removeFromBasket', authorize(1), async (req, res) => {
+  try {
+    const id = req.query.id;
+    const basket = await Basket.findById(req.session.user.basket);
+    basket.items = basket.items || [];
+    for (let i = 0; i < basket.items.length; i++) {
+      if (basket.items[i]._id.toString() === id) {
+        basket.items.splice(i, 1);
+        break;
+      }
+    }
+    await basket.save();
+    res.redirect('/basket');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error in get /removeFromBasket route - fetch product or save');
   }
 });
