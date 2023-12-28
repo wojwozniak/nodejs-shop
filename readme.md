@@ -6,6 +6,8 @@ Nodeshop.io is a simple e-commerce application built with Node.js, Express, and 
 
 All the data is stored in MongoDB Atlas cloud database. Entire frontend is built with EJS templating engine. I used Tailwind CSS for styling.
 
+Authentication is done by simple username and password. Passwords are hashed with bcrypt. Authorization on routes is handled by custom middleware.
+
 ## Features
 Main features required by the course:
 
